@@ -1,8 +1,9 @@
 import sys
 import doof.parsing as parsing
 
+
 def run():
-    #action
+    # action
     print(sys.argv)
     if len(sys.argv) >= 2 and sys.argv[1] == "make":
         print("make website")
