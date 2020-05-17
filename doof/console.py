@@ -3,9 +3,9 @@ from doof import parsing
 from doof import rendering
 
 
-def make(path: str):
-    aft = parsing.parse(path)
-    rendering.render(aft)
+def make(site_path: str):
+    aft = parsing.parse(site_path)
+    rendering.render(aft, site_path)
 
 
 def run():

@@ -27,6 +27,9 @@ def tree_parse(path):
                 children += [child]
         # up the index
         index.children = children
+        index.leaf = False
+        for child in index.children:
+            child.parent = child
         return index
 
 

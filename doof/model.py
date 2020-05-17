@@ -7,6 +7,8 @@ class ContentNode(object):
     def __init__(self, name: str):
         self.name = name
         self.children = []
+        self.leaf = True
+        self.parent = None
 
     def add_child(self, child):
         logger.info(
