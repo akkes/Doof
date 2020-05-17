@@ -15,28 +15,19 @@ def tree_parse(path):
         else:
             return model.Ressource.from_path(path)
     else:
-        folder = model.Folder.from_path(path)
+        index = None
+        children = []
+        # parse children
         for file in os.listdir(path):
             child = tree_parse(path + "/" + file)
-            if child is not None:
-                folder.add_child(child)
-        return folder
-
-
-def has_index(node: model.ContentNode):
-    for child in node.children:
-        if child.name == "index.toml":
-            return True
-        elif child.name == "index.md":
-            return True
-    return False
-
-
-def collapse(aft: model.ContentNode):
-    if has_index(aft):
-        pass
-    else:
-        pass
+            if file == "index.toml" or file == "index.md":
+                index = child
+                child.name = path.split("/")[-1]
+            else:
+                children += [child]
+        # up the index
+        index.children = children
+        return index
 
 
 def parse(path: str):

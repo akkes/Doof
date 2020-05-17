@@ -16,6 +16,14 @@ class ContentNode(object):
         )
         self.children += [child]
 
+    def remove_child(self, child):
+        logger.info(
+            "removing {child_name} to {self_name}".format(
+                child_name=child.name, self_name=self.name
+            )
+        )
+        self.children.remove(child)
+
 
 class Page(ContentNode):
     @classmethod
