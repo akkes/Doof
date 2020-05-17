@@ -1,5 +1,11 @@
 import sys
-import doof.parsing as parsing
+from doof import parsing
+from doof import rendering
+
+
+def make(path: str):
+    aft = parsing.parse(path)
+    rendering.render(aft)
 
 
 def run():
@@ -11,6 +17,6 @@ def run():
             folder_path = sys.argv[2]
         else:
             folder_path = "."
-        parsing.parse(folder_path)
+        make(folder_path)
     else:
         print("unknown command")
