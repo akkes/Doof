@@ -12,6 +12,13 @@ class Page(ContentNode):
         pairs = toml.load(path)
         name = path.split('/')[-1].replace(".toml", ".html")
         return cls(name, pairs)
+    
+    @classmethod
+    def from_md(cls, path: str):
+        name = path.split('/')[-1].replace(".md", ".html")
+        with open(path) as file:
+            content = file.readlines()
+        return cls(name, {"content": content})
 
     def __init__(self, name: str, pairs: dict):
         logger.info("creating {name} Page node".format(name=name))
