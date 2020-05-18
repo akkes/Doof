@@ -67,13 +67,27 @@ class Page(ContentNode):
     @classmethod
     def from_md(cls, path: str, site_config: SiteConfig):
         with open(path) as file:
-            content = file.readlines()
-        return cls(path, {"content": content}, site_config)
+            first_line = file.readline()
+            if first_line.startswith("+++"):
+                front_matter = ""
+                for line in file:
+                    if line.startswith("+++"):
+                        break
+                    front_matter += line
+                pairs = toml.loads(front_matter)
+                pairs["content"] = file.read()
+            else:
+                pairs = {"content": first_line}
+                pairs["content"] += file.read()
+        return cls(path, pairs, site_config)
 
     def __init__(self, path: str, pairs: dict, site_config: SiteConfig):
         super().__init__(path, site_config)
         self.pairs = pairs
-        self.template = None
+        try:
+            self.template = pairs["template"]
+        except KeyError:
+            self.template = None
 
 
 class Ressource(ContentNode):

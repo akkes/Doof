@@ -21,11 +21,14 @@ def tree_render(node: model.ContentNode, site_config: model.SiteConfig):
                 template = env.get_template(node.template)
             except AttributeError:
                 template = env.get_template("default.html")
-            output = template.render(node.__dict__)
-            print(output)
+            try:
+                node.pairs["content"] = commonmark.commonmark(node.pairs["content"])
+            except KeyError:
+                pass
+            output = template.render(**node.pairs)
             file.writelines(output)
     elif isinstance(node, model.Ressource):
-        node.file_destination.touch()
+        node.destination_path.touch()
 
 
 def render(aft: model.ContentNode, site_config: model.SiteConfig):
