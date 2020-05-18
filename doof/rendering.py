@@ -1,6 +1,7 @@
 import commonmark
-from jinja2 import Template
+from jinja2 import Template, Environment, FileSystemLoader
 from shutil import rmtree
+from pathlib import Path
 
 from doof import model
 
@@ -14,8 +15,14 @@ def tree_render(node: model.ContentNode, site_config: model.SiteConfig):
         else:
             node.destination_path.parent.mkdir()
         with open(node.destination_path, "w") as file:
-            template = Template("Content: {{content}}")
+            file_loader = FileSystemLoader(site_config.templates_path)
+            env = Environment(loader=file_loader)
+            try:
+                template = env.get_template(node.template)
+            except AttributeError:
+                template = env.get_template("default.html")
             output = template.render(node.__dict__)
+            print(output)
             file.writelines(output)
     elif isinstance(node, model.Ressource):
         node.file_destination.touch()

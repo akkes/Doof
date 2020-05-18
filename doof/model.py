@@ -17,6 +17,10 @@ class SiteConfig(object):
     def output_path(self):
         return self.path / "output"
 
+    @property
+    def templates_path(self):
+        return self.path / "templates"
+
 
 class ContentNode(object):
     def __init__(self, path: str, site_config: SiteConfig):
@@ -53,25 +57,6 @@ class ContentNode(object):
     def destination_path(self):
         return self.site_config.output_path / self.rel_destination_path
 
-    def add_site(self, site_config: SiteConfig):
-        self.site_config = site_config
-
-    def add_child(self, child):
-        logger.info(
-            "adding {child_name} to {self_name}".format(
-                child_name=child.name, self_name=self.slug
-            )
-        )
-        self.children += [child]
-
-    def remove_child(self, child):
-        logger.info(
-            "removing {child_name} to {self_name}".format(
-                child_name=child.name, self_name=self.slug
-            )
-        )
-        self.children.remove(child)
-
 
 class Page(ContentNode):
     @classmethod
@@ -88,6 +73,7 @@ class Page(ContentNode):
     def __init__(self, path: str, pairs: dict, site_config: SiteConfig):
         super().__init__(path, site_config)
         self.pairs = pairs
+        self.template = None
 
 
 class Ressource(ContentNode):
@@ -107,16 +93,3 @@ class Folder(ContentNode):
 
     def __init__(self, path: str, site_config: SiteConfig):
         super().__init__(path, site_config)
-
-
-class Site(object):
-    def __init__(self, path):
-        self.path = path
-
-    @property
-    def content_path(self):
-        return self.path + "content/"
-
-    @property
-    def output_path(self):
-        return self.path + "output/"
