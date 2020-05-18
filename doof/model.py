@@ -35,26 +35,23 @@ class ContentNode(object):
         return bool(self.children)
 
     @property
-    def slug(self):
-        if self.source_path.name == "index.md" or self.source_path.name == "index.toml":
-            return self.source_path.parent.name
-        else:
-            return self.source_path.name
-
-    @property
-    def site_destination(self):
-        if self.dir:
-            return self.site_path.parent
-        else:
-            return self.site_path.parent / self.site_path.stem
-
-    @property
-    def file_destination(self):
-        return self.site_config.output_path / self.site_destination / Path("index.html")
-
-    @property
-    def site_path(self):
+    def rel_source_path(self):
         return self.source_path.relative_to(self.site_config.content_path)
+
+    @property
+    def rel_url_path(self):
+        if self.source_path.name == "index.md" or self.source_path.name == "index.toml":
+            return self.rel_source_path.parent
+        else:
+            return self.rel_source_path.parent / Path(self.source_path.stem)
+
+    @property
+    def rel_destination_path(self):
+        return self.rel_url_path / Path("index.html")
+
+    @property
+    def destination_path(self):
+        return self.site_config.output_path / self.rel_destination_path
 
     def add_site(self, site_config: SiteConfig):
         self.site_config = site_config
