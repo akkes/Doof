@@ -28,7 +28,7 @@ def tree_parse(path: Path, site_config: model.SiteConfig):
         # up the index
         index.children = children
         for child in index.children:
-            child.parent = child
+            child.parent = index
         return index
 
 
