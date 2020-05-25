@@ -37,6 +37,7 @@ class ContentNode(object):
         self.source_path = path
         self.parent = None
         self.name = self.source_path.stem
+        self.title = self.name
         self.date = time.ctime(path.stat().st_mtime)
 
     @property
