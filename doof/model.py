@@ -33,10 +33,27 @@ class ContentNode(object):
         self.site_config = site_config
         self.children = []
         self.ressources = []
+        self.siblings = [self]
         self.source_path = path
         self.parent = None
         self.name = self.source_path.stem
         self.date = time.ctime(path.stat().st_mtime)
+
+    @property
+    def previous(self):
+        i_self = self.siblings.index(self)
+        if i_self - 1 < 0:
+            return None
+        else:
+            return self.siblings[i_self - 1]
+
+    @property
+    def next(self):
+        i_self = self.siblings.index(self)
+        if i_self + 1 > len(self.siblings) - 1:
+            return None
+        else:
+            return self.siblings[i_self + 1]
 
     @property
     def leaf(self):

@@ -35,6 +35,7 @@ def tree_parse(path: Path, site_config: model.SiteConfig):
         index.ressources = ressources
         for child in index.children:
             child.parent = index
+            child.siblings = children
         return index
 
 
