@@ -8,6 +8,10 @@ from doof.logging import logger
 class SiteConfig(object):
     def __init__(self, path):
         self.path = Path(path)
+        try:
+            self.__dict__.update(toml.load(Path(path) / "config.toml"))
+        except FileNotFoundError:
+            pass
 
     @property
     def content_path(self):
@@ -84,6 +88,8 @@ class Page(ContentNode):
 
     def __init__(self, path: str, pairs: dict, site_config: SiteConfig):
         super().__init__(path, site_config)
+        if path.name == "index.toml" or path.name == "index.md":
+            self.name = path.parent.stem
         self.__dict__.update(pairs)
 
 

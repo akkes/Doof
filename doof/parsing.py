@@ -37,6 +37,7 @@ def parse(site_config: model.SiteConfig):
 
     content_tree = tree_parse(site_config.content_path, site_config)
     helpers.display_aft(content_tree)
+    site_config.root = content_tree
     return content_tree
     # cProfile.runctx("[walk_parse('{path}') for _ in range(100000)]".format(path=path), globals(), locals())
     # cProfile.runctx("[tree_parse('{path}') for _ in range(100000)]".format(path=path), globals(), locals())

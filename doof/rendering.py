@@ -25,13 +25,13 @@ def tree_render(node: model.ContentNode, site_config: model.SiteConfig):
                 node.content = commonmark.commonmark(node.content)
             except AttributeError:
                 pass
-            output = template.render(page=node)
+            output = template.render(page=node, site=site_config)
             file.writelines(output)
     elif isinstance(node, model.Ressource):
         node.destination_path.touch()
 
 
-def render(aft: model.ContentNode, site_config: model.SiteConfig):
+def render(site_config: model.SiteConfig):
     print("render site")
     # try:
     #     site_config.output_path.mkdir()
@@ -41,4 +41,4 @@ def render(aft: model.ContentNode, site_config: model.SiteConfig):
         rmtree(site_config.output_path)
     except FileNotFoundError:
         pass
-    tree_render(aft, site_config)
+    tree_render(site_config.root, site_config)
