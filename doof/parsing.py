@@ -16,19 +16,23 @@ def tree_parse(path: Path, site_config: model.SiteConfig):
         else:
             return model.Ressource.from_path(path, site_config)
     else:
-        index = None
+        index = model.Folder(path, site_config)
         children = []
+        ressources = []
         # parse children
         for file in path.iterdir():
             child = tree_parse(path / file, site_config)
             if file.name == "index.toml" or file.name == "index.md":
                 index = child
-            else:
+            elif isinstance(child, model.Page) or isinstance(child, model.Folder):
                 children += [child]
+            else:
+                ressources += [child]
         # sort items
         children = sorted(children, key=lambda x: x.date)
         # up the index
         index.children = children
+        index.ressources = ressources
         for child in index.children:
             child.parent = index
         return index

@@ -32,6 +32,7 @@ class ContentNode(object):
         logger.info("creating {slug} Page node".format(slug=path.name))
         self.site_config = site_config
         self.children = []
+        self.ressources = []
         self.source_path = path
         self.parent = None
         self.name = self.source_path.stem

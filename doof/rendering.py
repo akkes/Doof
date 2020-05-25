@@ -27,8 +27,12 @@ def tree_render(node: model.ContentNode, site_config: model.SiteConfig):
                 pass
             output = template.render(page=node, site=site_config)
             file.writelines(output)
-    elif isinstance(node, model.Ressource):
-        copyfile(node.source_path, node.destination_path)
+    elif isinstance(node, model.Folder):
+        node.destination_path.mkdir()
+        for child in node.children:
+            tree_render(child, site_config)
+    for item in node.ressources:
+        copyfile(item.source_path, item.destination_path)
 
 
 def render(site_config: model.SiteConfig):
