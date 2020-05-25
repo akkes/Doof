@@ -1,4 +1,5 @@
 import sys
+import os
 from doof import parsing
 from doof import rendering
 from doof import model
@@ -18,7 +19,7 @@ def run():
         if len(sys.argv) > 2:
             folder_path = sys.argv[2]
         else:
-            folder_path = "."
+            folder_path = os.getcwd()
         make(folder_path)
     else:
         print("unknown command")
