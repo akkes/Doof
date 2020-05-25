@@ -22,10 +22,10 @@ def tree_render(node: model.ContentNode, site_config: model.SiteConfig):
             except AttributeError:
                 template = env.get_template("default.html")
             try:
-                node.pairs["content"] = commonmark.commonmark(node.pairs["content"])
-            except KeyError:
+                node.content = commonmark.commonmark(node.content)
+            except AttributeError:
                 pass
-            output = template.render(**node.pairs)
+            output = template.render(page=node)
             file.writelines(output)
     elif isinstance(node, model.Ressource):
         node.destination_path.touch()

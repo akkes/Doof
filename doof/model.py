@@ -29,6 +29,7 @@ class ContentNode(object):
         self.children = []
         self.source_path = path
         self.parent = None
+        self.name = self.source_path.stem
 
     @property
     def leaf(self):
@@ -83,11 +84,7 @@ class Page(ContentNode):
 
     def __init__(self, path: str, pairs: dict, site_config: SiteConfig):
         super().__init__(path, site_config)
-        self.pairs = pairs
-        try:
-            self.template = pairs["template"]
-        except KeyError:
-            self.template = None
+        self.__dict__.update(pairs)
 
 
 class Ressource(ContentNode):
