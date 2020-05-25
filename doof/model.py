@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 
 import toml
 
@@ -27,13 +28,14 @@ class SiteConfig(object):
 
 
 class ContentNode(object):
-    def __init__(self, path: str, site_config: SiteConfig):
+    def __init__(self, path: Path, site_config: SiteConfig):
         logger.info("creating {slug} Page node".format(slug=path.name))
         self.site_config = site_config
         self.children = []
         self.source_path = path
         self.parent = None
         self.name = self.source_path.stem
+        self.date = time.ctime(path.stat().st_mtime)
 
     @property
     def leaf(self):
@@ -49,6 +51,20 @@ class ContentNode(object):
 
     @property
     def rel_url_path(self):
+        return self.rel_source_path
+
+    @property
+    def rel_destination_path(self):
+        return self.rel_url_path
+
+    @property
+    def destination_path(self):
+        return self.site_config.output_path / self.rel_destination_path
+
+
+class Page(ContentNode):
+    @property
+    def rel_url_path(self):
         if self.source_path.name == "index.md" or self.source_path.name == "index.toml":
             return self.rel_source_path.parent
         else:
@@ -58,12 +74,6 @@ class ContentNode(object):
     def rel_destination_path(self):
         return self.rel_url_path / Path("index.html")
 
-    @property
-    def destination_path(self):
-        return self.site_config.output_path / self.rel_destination_path
-
-
-class Page(ContentNode):
     @classmethod
     def from_toml(cls, path: str, site_config: SiteConfig):
         pairs = toml.load(path)
@@ -100,7 +110,6 @@ class Ressource(ContentNode):
 
     def __init__(self, path: str, site_config: SiteConfig):
         super().__init__(path, site_config)
-        self.raw = None
 
 
 class Folder(ContentNode):

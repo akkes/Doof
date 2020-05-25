@@ -25,6 +25,8 @@ def tree_parse(path: Path, site_config: model.SiteConfig):
                 index = child
             else:
                 children += [child]
+        # sort items
+        children = sorted(children, key=lambda x: x.date)
         # up the index
         index.children = children
         for child in index.children:

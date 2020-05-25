@@ -1,6 +1,6 @@
 import commonmark
 from jinja2 import Template, Environment, FileSystemLoader
-from shutil import rmtree
+from shutil import rmtree, copyfile
 from pathlib import Path
 
 from doof import model
@@ -28,7 +28,7 @@ def tree_render(node: model.ContentNode, site_config: model.SiteConfig):
             output = template.render(page=node, site=site_config)
             file.writelines(output)
     elif isinstance(node, model.Ressource):
-        node.destination_path.touch()
+        copyfile(node.source_path, node.destination_path)
 
 
 def render(site_config: model.SiteConfig):
