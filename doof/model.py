@@ -7,12 +7,19 @@ from doof.logging import logger
 
 
 class Site(object):
+    pages = []
+    ressources = []
+
     def __init__(self, path):
         self.path = Path(path)
         try:
             self.__dict__.update(toml.load(Path(path) / "config.toml"))
         except FileNotFoundError:
             pass
+
+    @property
+    def nodes(self):
+        return self.pages + self.ressources
 
     @property
     def content_path(self):
@@ -129,6 +136,7 @@ class Page(ContentNode):
             self.name = path.parent.stem
             self.title = self.name
         self.__dict__.update(pairs)
+        self.date = datetime.datetime.combine(self.date, datetime.time(0))
 
 
 class Ressource(ContentNode):

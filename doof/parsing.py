@@ -26,8 +26,10 @@ def tree_parse(path: Path, site: model.Site):
                 index = child
             elif isinstance(child, model.Page) or isinstance(child, model.Folder):
                 children += [child]
+                site.pages += [child]
             else:
                 ressources += [child]
+                site.ressources += [child]
         # sort items
         children = sorted(children, key=lambda x: x.date)
         # up the index
