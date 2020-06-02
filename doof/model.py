@@ -30,6 +30,10 @@ class Site(object):
         return self.path / "output"
 
     @property
+    def assets_path(self):
+        return self.path / "assets"
+
+    @property
     def site_path(self):
         return self.output_path
 

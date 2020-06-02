@@ -1,6 +1,6 @@
 import commonmark
 from jinja2 import Template, Environment, FileSystemLoader
-from shutil import rmtree, copyfile
+from shutil import rmtree, copyfile, copytree
 from pathlib import Path
 
 from doof import model
@@ -46,3 +46,4 @@ def render(site: model.Site):
     except FileNotFoundError:
         pass
     tree_render(site.root, site)
+    copytree(site.assets_path, site.output_path / "assets")
