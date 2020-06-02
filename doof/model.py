@@ -1,5 +1,5 @@
 from pathlib import Path
-import time
+import datetime
 
 import toml
 
@@ -23,6 +23,10 @@ class SiteConfig(object):
         return self.path / "output"
 
     @property
+    def site_path(self):
+        return self.output_path
+
+    @property
     def templates_path(self):
         return self.path / "templates"
 
@@ -38,7 +42,7 @@ class ContentNode(object):
         self.parent = None
         self.name = self.source_path.stem
         self.title = self.name
-        self.date = time.ctime(path.stat().st_mtime)
+        self.date = datetime.datetime.fromtimestamp(path.stat().st_mtime)
 
     @property
     def previous(self):
@@ -71,6 +75,10 @@ class ContentNode(object):
     @property
     def rel_url_path(self):
         return self.rel_source_path
+
+    @property
+    def url_path(self):
+        return self.site_config.site_path / self.rel_url_path
 
     @property
     def rel_destination_path(self):
@@ -119,6 +127,7 @@ class Page(ContentNode):
         super().__init__(path, site_config)
         if path.name == "index.toml" or path.name == "index.md":
             self.name = path.parent.stem
+            self.title = self.name
         self.__dict__.update(pairs)
 
 
