@@ -6,7 +6,7 @@ import toml
 from doof.logging import logger
 
 
-class SiteConfig(object):
+class Site(object):
     def __init__(self, path):
         self.path = Path(path)
         try:
@@ -32,9 +32,9 @@ class SiteConfig(object):
 
 
 class ContentNode(object):
-    def __init__(self, path: Path, site_config: SiteConfig):
+    def __init__(self, path: Path, site: Site):
         logger.info("creating {slug} Page node".format(slug=path.name))
-        self.site_config = site_config
+        self.site = site
         self.children = []
         self.ressources = []
         self.siblings = [self]
@@ -70,7 +70,7 @@ class ContentNode(object):
 
     @property
     def rel_source_path(self):
-        return self.source_path.relative_to(self.site_config.content_path)
+        return self.source_path.relative_to(self.site.content_path)
 
     @property
     def rel_url_path(self):
@@ -78,7 +78,7 @@ class ContentNode(object):
 
     @property
     def url_path(self):
-        return self.site_config.site_path / self.rel_url_path
+        return self.site.site_path / self.rel_url_path
 
     @property
     def rel_destination_path(self):
@@ -86,7 +86,7 @@ class ContentNode(object):
 
     @property
     def destination_path(self):
-        return self.site_config.output_path / self.rel_destination_path
+        return self.site.output_path / self.rel_destination_path
 
 
 class Page(ContentNode):
@@ -102,12 +102,12 @@ class Page(ContentNode):
         return self.rel_url_path / Path("index.html")
 
     @classmethod
-    def from_toml(cls, path: str, site_config: SiteConfig):
+    def from_toml(cls, path: str, site: Site):
         pairs = toml.load(path)
-        return cls(path, pairs, site_config)
+        return cls(path, pairs, site)
 
     @classmethod
-    def from_md(cls, path: str, site_config: SiteConfig):
+    def from_md(cls, path: str, site: Site):
         with open(path) as file:
             first_line = file.readline()
             if first_line.startswith("+++"):
@@ -121,10 +121,10 @@ class Page(ContentNode):
             else:
                 pairs = {"content": first_line}
                 pairs["content"] += file.read()
-        return cls(path, pairs, site_config)
+        return cls(path, pairs, site)
 
-    def __init__(self, path: str, pairs: dict, site_config: SiteConfig):
-        super().__init__(path, site_config)
+    def __init__(self, path: str, pairs: dict, site: Site):
+        super().__init__(path, site)
         if path.name == "index.toml" or path.name == "index.md":
             self.name = path.parent.stem
             self.title = self.name
@@ -133,17 +133,17 @@ class Page(ContentNode):
 
 class Ressource(ContentNode):
     @classmethod
-    def from_path(cls, path: str, site_config: SiteConfig):
-        return cls(path, site_config)
+    def from_path(cls, path: str, site: Site):
+        return cls(path, site)
 
-    def __init__(self, path: str, site_config: SiteConfig):
-        super().__init__(path, site_config)
+    def __init__(self, path: str, site: Site):
+        super().__init__(path, site)
 
 
 class Folder(ContentNode):
     @classmethod
-    def from_path(cls, path: str, site_config: SiteConfig):
-        return cls(path, site_config)
+    def from_path(cls, path: str, site: Site):
+        return cls(path, site)
 
-    def __init__(self, path: str, site_config: SiteConfig):
-        super().__init__(path, site_config)
+    def __init__(self, path: str, site: Site):
+        super().__init__(path, site)

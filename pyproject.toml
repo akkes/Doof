@@ -13,6 +13,7 @@ jinja2 = "^2.11.2"
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 black = "^19.10b0"
+rope = "^0.17.0"
 
 [tool.poetry.scripts]
 doof = 'doof.console:run'

@@ -6,9 +6,9 @@ from doof import model
 
 
 def make(site_path: str):
-    site_config = model.SiteConfig(site_path)
-    aft = parsing.parse(site_config)
-    rendering.render(site_config)
+    site = model.Site(site_path)
+    aft = parsing.parse(site)
+    rendering.render(site)
 
 
 def run():

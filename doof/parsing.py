@@ -6,22 +6,22 @@ from doof import model
 from doof import helpers
 
 
-def tree_parse(path: Path, site_config: model.SiteConfig):
+def tree_parse(path: Path, site: model.Site):
     # print(path)
     if os.path.isfile(path):
         if path.suffix == ".toml":
-            return model.Page.from_toml(path, site_config)
+            return model.Page.from_toml(path, site)
         elif path.suffix == ".md":
-            return model.Page.from_md(path, site_config)
+            return model.Page.from_md(path, site)
         else:
-            return model.Ressource.from_path(path, site_config)
+            return model.Ressource.from_path(path, site)
     else:
-        index = model.Folder(path, site_config)
+        index = model.Folder(path, site)
         children = []
         ressources = []
         # parse children
         for file in path.iterdir():
-            child = tree_parse(path / file, site_config)
+            child = tree_parse(path / file, site)
             if file.name == "index.toml" or file.name == "index.md":
                 index = child
             elif isinstance(child, model.Page) or isinstance(child, model.Folder):
@@ -39,12 +39,12 @@ def tree_parse(path: Path, site_config: model.SiteConfig):
         return index
 
 
-def parse(site_config: model.SiteConfig):
+def parse(site: model.Site):
     # walk_parse(path + "/content")
 
-    content_tree = tree_parse(site_config.content_path, site_config)
+    content_tree = tree_parse(site.content_path, site)
     helpers.display_aft(content_tree)
-    site_config.root = content_tree
+    site.root = content_tree
     return content_tree
     # cProfile.runctx("[walk_parse('{path}') for _ in range(100000)]".format(path=path), globals(), locals())
     # cProfile.runctx("[tree_parse('{path}') for _ in range(100000)]".format(path=path), globals(), locals())

@@ -6,16 +6,16 @@ from pathlib import Path
 from doof import model
 
 
-def tree_render(node: model.ContentNode, site_config: model.SiteConfig):
+def tree_render(node: model.ContentNode, site: model.Site):
     if isinstance(node, model.Page):
         if node.dir:
             node.destination_path.parent.mkdir()
             for child in node.children:
-                tree_render(child, site_config)
+                tree_render(child, site)
         else:
             node.destination_path.parent.mkdir()
         with open(node.destination_path, "w") as file:
-            file_loader = FileSystemLoader(site_config.templates_path)
+            file_loader = FileSystemLoader(site.templates_path)
             env = Environment(loader=file_loader)
             try:
                 template = env.get_template(node.template)
@@ -25,24 +25,24 @@ def tree_render(node: model.ContentNode, site_config: model.SiteConfig):
                 node.content = commonmark.commonmark(node.content)
             except AttributeError:
                 pass
-            output = template.render(page=node, site=site_config)
+            output = template.render(page=node, site=site)
             file.writelines(output)
     elif isinstance(node, model.Folder):
         node.destination_path.mkdir()
         for child in node.children:
-            tree_render(child, site_config)
+            tree_render(child, site)
     for item in node.ressources:
         copyfile(item.source_path, item.destination_path)
 
 
-def render(site_config: model.SiteConfig):
+def render(site: model.Site):
     print("render site")
     # try:
     #     site_config.output_path.mkdir()
     # except FileExistsError:
     #     site_config.output_path.mkdir()
     try:
-        rmtree(site_config.output_path)
+        rmtree(site.output_path)
     except FileNotFoundError:
         pass
-    tree_render(site_config.root, site_config)
+    tree_render(site.root, site)
