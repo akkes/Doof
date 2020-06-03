@@ -4,6 +4,7 @@ from shutil import rmtree, copyfile, copytree
 from pathlib import Path
 
 from doof import model
+from doof import helpers
 
 
 def tree_render(node: model.ContentNode, site: model.Site):
@@ -17,6 +18,7 @@ def tree_render(node: model.ContentNode, site: model.Site):
         with open(node.destination_path, "w") as file:
             file_loader = FileSystemLoader(site.templates_path)
             env = Environment(loader=file_loader)
+            env.filters["visible"] = helpers.visible
             try:
                 template = env.get_template(node.template)
             except AttributeError:
