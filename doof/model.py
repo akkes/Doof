@@ -54,22 +54,27 @@ class ContentNode(object):
         self.name = self.source_path.stem
         self.title = self.name
         self.date = datetime.datetime.fromtimestamp(path.stat().st_mtime)
+        self.hidden = False
 
     @property
     def previous(self):
         i_self = self.siblings.index(self)
-        if i_self - 1 < 0:
-            return None
-        else:
-            return self.siblings[i_self - 1]
+        i_prev = i_self - 1
+        while i_prev > 0:
+            if not self.siblings[i_prev].hidden:
+                return self.siblings[i_prev]
+            i_prev -= 1
+        return None
 
     @property
     def next(self):
         i_self = self.siblings.index(self)
-        if i_self + 1 > len(self.siblings) - 1:
-            return None
-        else:
-            return self.siblings[i_self + 1]
+        i_next = i_self + 1
+        while i_next < len(self.siblings):
+            if not self.siblings[i_next].hidden:
+                return self.siblings[i_next]
+            i_next += 1
+        return None
 
     @property
     def leaf(self):
@@ -100,6 +105,9 @@ class ContentNode(object):
     @property
     def destination_path(self):
         return self.site.output_path / self.rel_destination_path
+
+    def __repr__(self):
+        return "<Node: {}>".format(self.title)
 
 
 class Page(ContentNode):
