@@ -89,7 +89,7 @@ class ContentNode(object):
 
     @property
     def url_path(self):
-        return self.site.url / self.rel_url_path
+        return self.site.url + "/" + str(self.rel_url_path)
 
     url = url_path
 
