@@ -57,24 +57,34 @@ class ContentNode(object):
         self.hidden = False
 
     @property
-    def previous(self):
+    def prev(self):
         i_self = self.siblings.index(self)
         i_prev = i_self - 1
-        while i_prev > 0:
-            if not self.siblings[i_prev].hidden:
-                return self.siblings[i_prev]
-            i_prev -= 1
+        if i_prev > 0:
+            return self.siblings[i_prev]
         return None
+
+    @property
+    def prev_visible(self):
+        prev_node = self.prev
+        while prev_node is not None and prev_node.hidden:
+            prev_node = prev_node.prev
+        return prev_node
 
     @property
     def next(self):
         i_self = self.siblings.index(self)
         i_next = i_self + 1
-        while i_next < len(self.siblings):
-            if not self.siblings[i_next].hidden:
-                return self.siblings[i_next]
-            i_next += 1
+        if i_next < len(self.siblings):
+            return self.siblings[i_next]
         return None
+
+    @property
+    def next_visible(self):
+        next_node = self.next
+        while next_node is not None and next_node.hidden:
+            next_node = next_node.next
+        return next_node
 
     @property
     def leaf(self):
@@ -107,7 +117,7 @@ class ContentNode(object):
         return self.site.output_path / self.rel_destination_path
 
     def __repr__(self):
-        return "<Node: {}>".format(self.title)
+        return "<{}: {}>".format(self.__class__.__name__, self.title)
 
 
 class Page(ContentNode):
