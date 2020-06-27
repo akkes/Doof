@@ -17,6 +17,8 @@ class Site(object):
         except FileNotFoundError:
             pass
 
+    url = "http://localhost:3663"
+
     @property
     def nodes(self):
         return self.pages + self.ressources

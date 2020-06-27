@@ -9,7 +9,10 @@
             "type": "python",
             "request": "launch",
             "module": "doof",
-            "args" : ["make", "/home/akkes/Devs/new_akkes.fr"]
+            "args": [
+                "serve",
+                "/home/akkes/Devs/new_akkes.fr"
+            ]
         }
     ]
 }
