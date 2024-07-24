@@ -11,9 +11,9 @@ commonmark = "^0.9.1"
 jinja2 = "^3.1.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
-black = "^24.3.0"
-rope = "^0.17.0"
+pytest = ">=8"
+black = ">=24"
+rope = ">=0.17"
 
 [tool.poetry.scripts]
 doof = 'doof.console:run'
