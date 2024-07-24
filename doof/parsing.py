@@ -6,7 +6,7 @@ from doof import model
 from doof import helpers
 
 
-def tree_parse(path: Path, site: model.Site):
+def tree_parse(path: Path, site: model.Site) -> model.ContentNode:
     # print(path)
     if os.path.isfile(path):
         if path.suffix == ".toml":
@@ -41,11 +41,12 @@ def tree_parse(path: Path, site: model.Site):
         return index
 
 
-def parse(site: model.Site):
+def parse(site: model.Site) -> model.ContentNode:
     # walk_parse(path + "/content")
 
     content_tree = tree_parse(site.content_path, site)
     helpers.display_aft(content_tree)
+    site.pages += [content_tree]
     site.root = content_tree
     return content_tree
     # cProfile.runctx("[walk_parse('{path}') for _ in range(100000)]".format(path=path), globals(), locals())
